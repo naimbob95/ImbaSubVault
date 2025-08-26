@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # MongoDB database
+  mongodb:
+    image: mongo:7
+    container_name: imbasubvault-mongodb-dev
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: imbasubvault
+    volumes:
+      - mongodb_data_dev:/data/db
+    networks:
+      - imbasubvault-network
+
+  # Backend API (Development)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: imbasubvault-backend-dev
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=development
+      - PORT=5001
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/imbasubvault?authSource=admin
+      - JWT_SECRET=your-super-secret-jwt-key-for-development
+      - JWT_EXPIRES_IN=1d
+    depends_on:
+      - mongodb
+    networks:
+      - imbasubvault-network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: npm run start:dev
+
+  # Frontend Next.js app (Development)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: imbasubvault-frontend-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:5001/api
+    depends_on:
+      - backend
+    networks:
+      - imbasubvault-network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+
+volumes:
+  mongodb_data_dev:
+
+networks:
+  imbasubvault-network:
+    driver: bridge
