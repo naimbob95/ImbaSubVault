@@ -375,4 +375,4 @@ docker system prune -a
 For more detailed documentation, check out:
 - [Backend Documentation](./backend/README.md)
 - [Frontend Documentation](./frontend/README.md)
-- [Docker Setup Guide](./docker-setup.md) (if exists)
+- [Docker Setup Guide](./docker-setup.md)
