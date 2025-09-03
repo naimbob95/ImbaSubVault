@@ -17,6 +17,17 @@ services:
     networks:
       - imbasubvault-network
 
+  # Mailpit (SMTP testing server)
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: imbasubvault-mailpit-dev
+    restart: unless-stopped
+    ports:
+      - "8025:8025"   # Web UI
+      - "1025:1025"   # SMTP server
+    networks:
+      - imbasubvault-network
+
   # Backend API (Development)
   backend:
     build:
@@ -33,8 +44,12 @@ services:
       - MONGODB_URI=mongodb://admin:password123@mongodb:27017/imbasubvault?authSource=admin
       - JWT_SECRET=your-super-secret-jwt-key-for-development
       - JWT_EXPIRES_IN=1d
+      # Mailpit SMTP config
+      - SMTP_HOST=mailpit
+      - SMTP_PORT=1025
     depends_on:
       - mongodb
+      - mailpit
     networks:
       - imbasubvault-network
     volumes:
