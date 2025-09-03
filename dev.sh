@@ -11,6 +11,10 @@ case "$1" in
     echo "Stopping docker-compose (dev)..."
     docker-compose -f docker-compose.dev.yml down
     ;;
+  logs)
+    echo "monitoring the logs..."
+    docker-compose -f docker-compose.dev.yml logs -f
+    ;;
   *)
     echo "Usage: $0 {up|down}"
     exit 1

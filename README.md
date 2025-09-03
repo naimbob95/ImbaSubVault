@@ -126,13 +126,14 @@ imbaSubVault/
 ### Development Environment
 ```bash
 # Start development environment
-docker-compose -f docker-compose.dev.yml up --build
+./dev.sh up
 
 # Stop development environment
-docker-compose -f docker-compose.dev.yml down
+./dev.sh down
 
 # View logs
-docker-compose -f docker-compose.dev.yml logs -f
+./dev.sh logs
+
 ```
 
 ### Production Environment
