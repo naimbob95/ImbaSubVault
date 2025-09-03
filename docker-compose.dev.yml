@@ -9,9 +9,9 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: password123
-      MONGO_INITDB_DATABASE: imbasubvault
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
     volumes:
       - mongodb_data_dev:/data/db
     networks:
@@ -25,6 +25,10 @@ services:
     ports:
       - "8025:8025"   # Web UI
       - "1025:1025"   # SMTP server
+    environment:
+      - MP_UI_AUTH=${MP_UI_AUTH}
+      - MP_SMTP_AUTH_ACCEPT_ANY=${MP_SMTP_AUTH_ACCEPT_ANY}
+      - MP_SMTP_AUTH_ALLOW_INSECURE=${MP_SMTP_AUTH_ALLOW_INSECURE}
     networks:
       - imbasubvault-network
 
@@ -39,14 +43,17 @@ services:
     ports:
       - "5001:5001"
     environment:
-      - NODE_ENV=development
-      - PORT=5001
-      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/imbasubvault?authSource=admin
-      - JWT_SECRET=your-super-secret-jwt-key-for-development
-      - JWT_EXPIRES_IN=1d
-      # Mailpit SMTP config
-      - SMTP_HOST=mailpit
-      - SMTP_PORT=1025
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - MONGODB_URI=${MONGODB_URI}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - EMAIL_FROM=${EMAIL_FROM}
+      - FRONTEND_URL=${FRONTEND_URL}
     depends_on:
       - mongodb
       - mailpit
@@ -67,8 +74,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:5001/api
+      - NODE_ENV=${NODE_ENV}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     depends_on:
       - backend
     networks:
