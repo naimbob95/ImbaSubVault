@@ -39,6 +39,24 @@ export class AuthService {
     }
   }
 
+  public async forgotPassword(email: string): Promise<void> {
+    try {
+      await api.post('/auth/forgot-password', { email });
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      throw error;
+    }
+  }
+
+  public async resetPassword(token: string, newPassword: string): Promise<void> {
+    try {
+      await api.post('/auth/reset-password', { token, password: newPassword });
+    } catch (error) {
+      console.error('Reset password error:', error);
+      throw error;
+    }
+  }
+
   public async getProfile(): Promise<User> {
     try {
       const response = await api.get<User>('/users/profile');
@@ -99,12 +117,6 @@ export class AuthService {
     }
   }
 
-  private redirectToLogin(): void {
-    if (typeof window !== 'undefined') {
-      // left for backward compatibility but avoid using it — prefer UI-driven navigation
-      window.location.href = '/login';
-    }
-  }
 
   protected validateToken(): boolean {
     const token = this.getToken();
