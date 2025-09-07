@@ -68,6 +68,27 @@ export class AuthService {
     }
   }
 
+  public async updateProfile(updateData: { firstName?: string; lastName?: string; email?: string }): Promise<User> {
+    try {
+      const response = await api.put<User>('/users/profile', updateData);
+      this.currentUser = response.data;
+      return response.data;
+    } catch (error) {
+      console.error('Update profile error:', error);
+      throw error;
+    }
+  }
+
+  public async changePassword(changePasswordData: { currentPassword: string; newPassword: string }): Promise<{ message: string }> {
+    try {
+      const response = await api.put<{ message: string }>('/users/change-password', changePasswordData);
+      return response.data;
+    } catch (error) {
+      console.error('Change password error:', error);
+      throw error;
+    }
+  }
+
   public logout(): void {
     this.clearAuthData();
   }

@@ -76,10 +76,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = (): void => {
-    console.log("sini ke");
     authService.logout();
     setUser(null);
     // Navigate client-side to login page (prevents full page reload)
+    // Use an absolute path so navigation isn't relative to current route
     router.push('/auth/login');
   };
 
